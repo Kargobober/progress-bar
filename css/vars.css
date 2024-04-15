@@ -1,0 +1,14 @@
+:root {
+  --color-main: #005bff;
+  --color-bg-main: #fff;
+  --color-bg-alt: rgba(0, 150, 255, 0.078);
+
+  --color-text-main: #000;
+  --color-text-alt: #fff;
+
+  /* screen size */
+  --ss-mobile: 320px;
+  --ss-desktop: 1440px;
+
+  --radius-m: 5px;
+}
