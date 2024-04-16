@@ -48,13 +48,3 @@ body {
   cursor: pointer;
   outline: 1px solid #fff;
 }
-
-.progress {
-  width: 300px;
-  background-color: aqua;
-}
-
-.progress__circle {
-  stroke-width: 10px;
-  stroke: red;
-}

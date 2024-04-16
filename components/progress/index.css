@@ -1,0 +1,9 @@
+.progress {
+  width: 300px;
+}
+
+.progress__circle {
+  stroke: var(--color-main);
+  stroke-width: 10;
+  fill: transparent;
+}
