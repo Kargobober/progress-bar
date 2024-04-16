@@ -9,16 +9,33 @@
   </head>
   <body class="page">
     <main class="main">
-      <p>Hello world!</p>
-      <svg class="progress" width="120" height="120">
-        <circle
-          class="progress__circle"
-          cx="60"
-          cy="60"
-          r="52"
-          fill="transparent"
-        />
-      </svg>
+      <ul class="demo-progress">
+        <li class="demo-progress__list-item">
+          <input
+            type="text"
+            class="input demo-progress__input-value"
+            name="demo-progress-value"
+            value="0"
+          />
+          <label for="demo-progress-value">Value</label>
+        </li>
+        <li class="demo-progress__list-item">
+          <input
+            type="checkbox"
+            class="checkbox demo-progress__input-animation"
+            name="demo-progress-animation"
+          />
+          <label for="demo-progress-animation">Animate</label>
+        </li>
+        <li class="demo-progress__list-item">
+          <input
+            type="checkbox"
+            class="checkbox demo-progress__input-hiding"
+            name="demo-progress-hiding"
+          />
+          <label for="demo-progress-hiding">Hide</label>
+        </li>
+      </ul>
     </main>
     <script src="./scripts/index.js" type="module"></script>
   </body>

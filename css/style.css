@@ -1,4 +1,6 @@
 body {
+  height: 100vh;
+  height: 100dvh;
   min-width: var(--ss-mobile);
   margin: 0 auto;
 
@@ -47,4 +49,12 @@ body {
 .button:hover {
   cursor: pointer;
   outline: 1px solid #fff;
+}
+
+.main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

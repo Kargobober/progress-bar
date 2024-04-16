@@ -1,0 +1,14 @@
+.demo-progress {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.demo-progress__input-value {
+  width: 50px;
+}
+.demo-progress__input-animation {
+}
+.demo-progress__input-hiding {
+}
