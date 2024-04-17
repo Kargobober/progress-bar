@@ -1,6 +1,6 @@
 import { Progress } from "../components/index.js";
 
-const container = document.querySelector(".container");
+const container = document.querySelector(".main__container");
 const inputProgressValue = document.querySelector(
   ".demo-progress__input-value"
 );

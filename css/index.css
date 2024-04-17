@@ -2,5 +2,6 @@
 @import url(./fonts.css);
 @import url(./typography.css);
 @import url(./style.css);
+@import url(./main.css);
 @import url(../components/progress/index.css);
 @import url(../components/demoProgress/index.css);
