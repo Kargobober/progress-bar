@@ -1,6 +1,6 @@
 import { Progress } from "../components/index.js";
 
-const main = document.querySelector("main");
+const container = document.querySelector(".container");
 const inputProgressValue = document.querySelector(
   ".demo-progress__input-value"
 );
@@ -15,7 +15,7 @@ const inputProgressSizing = document.querySelector(
 );
 
 const progressStyles = {
-  size: 120,
+  size: "stretch",
   backgroundColor: "transparent",
   stroke: "var(--color-main)",
   backStroke: "var(--color-bg-alt)",
@@ -23,7 +23,7 @@ const progressStyles = {
   fill: "transparent",
   transitionDuration: "0.3s",
 };
-const progress = new Progress(main, "prepend", progressStyles);
+const progress = new Progress(container, "append", progressStyles);
 progress.render();
 
 inputProgressValue.addEventListener("change", (evt) => {

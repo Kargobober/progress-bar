@@ -1,3 +1,5 @@
+import { getContentSize } from "../../scripts/utils.js";
+
 const defaultStyles = {
   /**
    * number или "stretch" - в таком случае компонент растянется на ширину родителя
@@ -26,6 +28,38 @@ export default class Progress {
     this.method = method;
     this.styles = styles ?? defaultStyles;
 
+    if (this.styles.size === "stretch") {
+      if (this.method === "append" || this.method === "prepend") {
+        this.styles.size = Math.min(
+          getContentSize(this.node).width,
+          getContentSize(this.node).height
+        );
+        window.addEventListener("resize", () => {
+          this.setSize(
+            Math.min(
+              getContentSize(this.node).width,
+              getContentSize(this.node).height
+            )
+          );
+        });
+      } else {
+        // поиск родителя при before | after
+        const parent = this.node.parentNode;
+        this.styles.size = Math.min(
+          getContentSize(parent).width,
+          getContentSize(parent).height
+        );
+        window.addEventListener("resize", () => {
+          this.setSize(
+            Math.min(
+              getContentSize(parent).width,
+              getContentSize(parent).height
+            )
+          );
+        });
+      }
+    }
+
     this.svg = {
       markup: "",
       className: classPrefix,
@@ -41,9 +75,6 @@ export default class Progress {
         );
         this.markup.setAttribute("class", this.className);
         this.calcSize(externalContext);
-      },
-      toggleAnimation() {
-        this.markup.classList.toggle("progress_animated");
       },
       calcSize(externalContext) {
         this.markup.setAttribute("width", externalContext.styles.size);
@@ -102,6 +133,9 @@ export default class Progress {
         this.markup.style.strokeDasharray = `${this.circumference} ${this.circumference}`;
         this.markup.style.strokeDashoffset = this.circumference;
       },
+      toggleAnimation() {
+        this.markup.classList.toggle("progress_animated");
+      },
     };
     this.circle.createCircle(this);
     this.circle.handleResize();
@@ -127,6 +161,9 @@ export default class Progress {
     this.node[this.method](this.svg.markup);
   }
 
+  /**
+   * @param {0 | 1} condition - 1 = видно
+   */
   toggleHiding(condition) {
     if (condition) {
       this.svg.markup.style.visibility = "visible";
@@ -142,7 +179,7 @@ export default class Progress {
   }
 
   toggleAnimation() {
-    this.svg.toggleAnimation();
+    this.circle.toggleAnimation();
   }
 
   setProgress(value) {
@@ -158,11 +195,17 @@ export default class Progress {
   }
 
   setSize(value) {
+    // при ресайзе скачет длина окружности, потому отключаем плавность
+    this.circle.markup.style.transition = `stroke-dashoffset 0s linear`;
     this.styles.size = value;
     this.svg.calcSize(this);
     this.calcCircleSize(this.backCircle);
     this.calcCircleSize(this.circle);
     this.circle.handleResize();
     this.circle.setProgress(this.circle.lastValue);
+    // после окончания вычислений восстанавливем плавность изм-ий длины окружности
+    setTimeout(() => {
+      this.circle.markup.style.transition = `stroke-dashoffset ${this.styles.transitionDuration} linear`;
+    }, 0);
   }
 }
