@@ -40,11 +40,14 @@ export default class Progress {
           "http://www.w3.org/2000/svg"
         );
         this.markup.setAttribute("class", this.className);
-        this.markup.setAttribute("width", externalContext.styles.size);
-        this.markup.setAttribute("height", externalContext.styles.size);
+        this.calcSize(externalContext);
       },
       toggleAnimation() {
         this.markup.classList.toggle("progress_animated");
+      },
+      calcSize(externalContext) {
+        this.markup.setAttribute("width", externalContext.styles.size);
+        this.markup.setAttribute("height", externalContext.styles.size);
       },
     };
     this.svg.createSvg(this);
@@ -52,6 +55,15 @@ export default class Progress {
     this.svg.markup.style.opacity = "1";
     this.svg.markup.style.transition = `visibility 0s,
       opacity ${this.styles.transitionDuration} linear`;
+
+    this.calcCircleSize = (currentCircle) => {
+      currentCircle.markup.setAttribute("cx", `${this.styles.size / 2}`);
+      currentCircle.markup.setAttribute("cy", `${this.styles.size / 2}`);
+      currentCircle.markup.setAttribute(
+        "r",
+        `${this.styles.size / 2 - this.styles.strokeWidth / 2}`
+      );
+    };
 
     function createBasicCircle(currentCircle, externalContext) {
       currentCircle.markup = document.createElementNS(
@@ -68,21 +80,7 @@ export default class Progress {
         "stroke-width",
         `${externalContext.styles.strokeWidth}`
       );
-      currentCircle.markup.setAttribute(
-        "cx",
-        `${externalContext.styles.size / 2}`
-      );
-      currentCircle.markup.setAttribute(
-        "cy",
-        `${externalContext.styles.size / 2}`
-      );
-      currentCircle.markup.setAttribute(
-        "r",
-        `${
-          externalContext.styles.size / 2 -
-          externalContext.styles.strokeWidth / 2
-        }`
-      );
+      externalContext.calcCircleSize(currentCircle);
       currentCircle.markup.setAttribute("fill", externalContext.styles.fill);
     }
 
@@ -94,16 +92,19 @@ export default class Progress {
         this.markup.setAttribute("stroke", externalContext.styles.stroke);
       },
       setProgress(value) {
+        this.lastValue = value;
         const offset = this.circumference - (value / 100) * this.circumference;
         this.markup.style.strokeDashoffset = offset;
       },
+      handleResize() {
+        this.radius = this.markup.r.baseVal.value;
+        this.circumference = 2 * Math.PI * this.radius;
+        this.markup.style.strokeDasharray = `${this.circumference} ${this.circumference}`;
+        this.markup.style.strokeDashoffset = this.circumference;
+      },
     };
     this.circle.createCircle(this);
-
-    this.circle.radius = this.circle.markup.r.baseVal.value;
-    this.circle.circumference = 2 * Math.PI * this.circle.radius;
-    this.circle.markup.style.strokeDasharray = `${this.circle.circumference} ${this.circle.circumference}`;
-    this.circle.markup.style.strokeDashoffset = this.circle.circumference;
+    this.circle.handleResize();
     this.circle.markup.style.transformOrigin = "center";
     this.circle.markup.style.transform = "rotate(-90deg)";
     this.circle.markup.style.transition = `stroke-dashoffset ${this.styles.transitionDuration} linear`;
@@ -154,5 +155,14 @@ export default class Progress {
       return;
     }
     this.circle.setProgress(value);
+  }
+
+  setSize(value) {
+    this.styles.size = value;
+    this.svg.calcSize(this);
+    this.calcCircleSize(this.backCircle);
+    this.calcCircleSize(this.circle);
+    this.circle.handleResize();
+    this.circle.setProgress(this.circle.lastValue);
   }
 }

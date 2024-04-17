@@ -10,6 +10,9 @@ const inputProgressAnimation = document.querySelector(
 const inputProgressHiding = document.querySelector(
   ".demo-progress__input-hiding"
 );
+const inputProgressSizing = document.querySelector(
+  ".demo-progress__input-sizing"
+);
 
 const progressStyles = {
   size: 120,
@@ -44,4 +47,8 @@ inputProgressHiding.addEventListener("change", (evt) => {
   } else {
     progress.toggleHiding(1);
   }
+});
+
+inputProgressSizing.addEventListener("change", (evt) => {
+  progress.setSize(Number(evt.target.value));
 });
