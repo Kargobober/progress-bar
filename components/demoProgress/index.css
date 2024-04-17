@@ -4,14 +4,18 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  gap: 10px;
 }
+
+.demo-progress__list-item {
+  display: flex;
+  gap: 10px 20px;
+}
+
 .demo-progress__input-value {
   width: 50px;
 }
-.demo-progress__input-animation {
-}
-.demo-progress__input-hiding {
-}
+
 .demo-progress__input-sizing {
   width: 50px;
 }
