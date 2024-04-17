@@ -5,7 +5,6 @@ const defaultStyles = {
    * number или "stretch" - в таком случае компонент растянется на ширину родителя
    */
   size: 120,
-  backgroundColor: "transparent",
   stroke: "#000",
   // цвет круга на фоне
   backStroke: "#ff0000",
