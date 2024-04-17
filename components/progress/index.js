@@ -7,9 +7,9 @@ const defaultStyles = {
   stroke: "#000",
   // цвет круга на фоне
   backStroke: "#ff0000",
-  strokeWidth: 4,
+  strokeWidth: 10,
   fill: "transparent",
-  transitionDuration: "0.2s",
+  transitionDuration: "0.3s",
 };
 
 export default class Progress {
@@ -29,7 +29,7 @@ export default class Progress {
     this.svg = {
       markup: "",
       className: classPrefix,
-      createSvg(contextClass) {
+      createSvg(externalContext) {
         this.markup = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "svg"
@@ -40,13 +40,20 @@ export default class Progress {
           "http://www.w3.org/2000/svg"
         );
         this.markup.setAttribute("class", this.className);
-        this.markup.setAttribute("width", contextClass.styles.size);
-        this.markup.setAttribute("height", contextClass.styles.size);
+        this.markup.setAttribute("width", externalContext.styles.size);
+        this.markup.setAttribute("height", externalContext.styles.size);
+      },
+      toggleAnimation() {
+        this.markup.classList.toggle("progress_animated");
       },
     };
     this.svg.createSvg(this);
+    this.svg.markup.style.visibility = "visible";
+    this.svg.markup.style.opacity = "1";
+    this.svg.markup.style.transition = `visibility 0s,
+      opacity ${this.styles.transitionDuration} linear`;
 
-    function createBasicCircle(currentCircle, contextClass) {
+    function createBasicCircle(currentCircle, externalContext) {
       currentCircle.markup = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "circle"
@@ -59,29 +66,32 @@ export default class Progress {
       currentCircle.markup.setAttribute("class", currentCircle.className);
       currentCircle.markup.setAttribute(
         "stroke-width",
-        `${contextClass.styles.strokeWidth}`
+        `${externalContext.styles.strokeWidth}`
       );
       currentCircle.markup.setAttribute(
         "cx",
-        `${contextClass.styles.size / 2}`
+        `${externalContext.styles.size / 2}`
       );
       currentCircle.markup.setAttribute(
         "cy",
-        `${contextClass.styles.size / 2}`
+        `${externalContext.styles.size / 2}`
       );
       currentCircle.markup.setAttribute(
         "r",
-        `${contextClass.styles.size / 2 - contextClass.styles.strokeWidth * 2}`
+        `${
+          externalContext.styles.size / 2 -
+          externalContext.styles.strokeWidth / 2
+        }`
       );
-      currentCircle.markup.setAttribute("fill", contextClass.styles.fill);
+      currentCircle.markup.setAttribute("fill", externalContext.styles.fill);
     }
 
     this.circle = {
       markup: "",
       className: `${classPrefix}__circle`,
-      createCircle(contextClass) {
-        createBasicCircle(this, contextClass);
-        this.markup.setAttribute("stroke", contextClass.styles.stroke);
+      createCircle(externalContext) {
+        createBasicCircle(this, externalContext);
+        this.markup.setAttribute("stroke", externalContext.styles.stroke);
       },
       setProgress(value) {
         const offset = this.circumference - (value / 100) * this.circumference;
@@ -101,9 +111,9 @@ export default class Progress {
     this.backCircle = {
       markup: "",
       className: `${classPrefix}__back-circle`,
-      createCircle(contextClass) {
-        createBasicCircle(this, contextClass);
-        this.markup.setAttribute("stroke", contextClass.styles.backStroke);
+      createCircle(externalContext) {
+        createBasicCircle(this, externalContext);
+        this.markup.setAttribute("stroke", externalContext.styles.backStroke);
       },
     };
     this.backCircle.createCircle(this);
@@ -114,6 +124,24 @@ export default class Progress {
 
   render() {
     this.node[this.method](this.svg.markup);
+  }
+
+  toggleHiding(condition) {
+    if (condition) {
+      this.svg.markup.style.visibility = "visible";
+      this.svg.markup.style.opacity = "1";
+      this.svg.markup.style.transition = `visibility 0s,
+        opacity ${this.styles.transitionDuration} linear`;
+    } else {
+      this.svg.markup.style.visibility = "hidden";
+      this.svg.markup.style.opacity = "0";
+      this.svg.markup.style.transition = `visibility 0s ${this.styles.transitionDuration},
+        opacity ${this.styles.transitionDuration} linear`;
+    }
+  }
+
+  toggleAnimation() {
+    this.svg.toggleAnimation();
   }
 
   setProgress(value) {

@@ -1,0 +1,12 @@
+@keyframes rotating {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+.progress_animated {
+  animation: rotating 2s infinite linear;
+}
