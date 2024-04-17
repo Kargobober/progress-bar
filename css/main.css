@@ -20,6 +20,9 @@
   width: 80%;
   justify-self: center;
   aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .main__controls {
